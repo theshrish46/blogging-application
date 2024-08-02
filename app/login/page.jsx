@@ -28,8 +28,12 @@ const LoginPage = () => {
         animate={{ opacity: 1, scale: 1 }}
         transition={{ duration: 0.5 }}
       >
-        <h1 className="text-2xl font-bold text-gray-900 mb-6 text-center">Welcome Back!</h1>
-        <p className="text-gray-600 mb-8 text-center">Sign in to access your blog account and manage your posts.</p>
+        <h1 className="text-2xl font-bold text-gray-900 mb-6 text-center">
+          Welcome Back!
+        </h1>
+        <p className="text-gray-600 mb-8 text-center">
+          Sign in to access your blog account and manage your posts.
+        </p>
         <button
           className="w-full px-4 py-2 text-white bg-blue-500 rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50"
           onClick={() => signIn("google")}
