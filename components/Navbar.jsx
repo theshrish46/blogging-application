@@ -8,6 +8,7 @@ import Link from "next/link";
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [isMenuOpen, setIsManageOpen] = useState(false);
   const { status } = useSession();
 
   return (
@@ -38,6 +39,13 @@ const Navbar = () => {
                   className="text-gray-900 hover:text-gray-700 px-3 py-2 rounded-md text-sm font-medium"
                 >
                   Manage
+                </Link>
+                
+                <Link
+                  href="/admin"
+                  className="text-gray-900 hover:text-gray-700 px-3 py-2 rounded-md text-sm font-medium"
+                >
+                  Admin
                 </Link>
               </div>
             </div>

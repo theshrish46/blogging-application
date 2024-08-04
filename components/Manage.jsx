@@ -23,14 +23,12 @@ const ManagePage = () => {
   const [chartData, setChartData] = useState(null);
   const [error, setError] = useState(null);
 
-  console.log(session?.user?.id);
-
   useEffect(() => {
     const fetchBlogs = async () => {
       if (status === "authenticated" && session?.user?.email) {
         try {
           const response = await axios.get(
-            `/api/blogs/author/${session.user.id}`
+            `/api/blog/author/${session.user.id}`
           );
           setBlogs(response.data);
 
@@ -91,22 +89,29 @@ const ManagePage = () => {
         {blogs.map((blog) => (
           <motion.div
             key={blog.id}
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
             transition={{ duration: 0.5 }}
-            className="bg-white shadow-md rounded-lg p-6"
+            className="p-4 border rounded-lg shadow-sm"
           >
-            <h2 className="text-xl font-semibold text-gray-900 mb-2">
-              {blog.title}
-            </h2>
-            <p className="text-gray-600 mb-4">Views: {blog.views}</p>
-            <p className="text-gray-600 mb-4">Likes: {blog.likes}</p>
-            <button
-              onClick={() => alert("Edit blog functionality to be implemented")}
-              className="text-blue-500 hover:text-blue-700"
-            >
-              Edit
-            </button>
+            <h2 className="text-xl font-semibold">{blog.title}</h2>
+            <p>{blog.excerpt}</p>
+            <p className="text-sm text-gray-600">{blog.views} views</p>
+            <p className="text-sm text-gray-600">{blog.likes} likes</p>
+            <div className="mt-4 flex space-x-2">
+              <button
+                onClick={() => handleEdit(blog.id)}
+                className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+              >
+                Edit
+              </button>
+              <button
+                onClick={() => handleDelete(blog.id)}
+                className="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600"
+              >
+                Delete
+              </button>
+            </div>
           </motion.div>
         ))}
       </div>

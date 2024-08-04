@@ -60,8 +60,16 @@ export async function POST(req) {
         title: title,
         content: content,
         imageUrl: media,
-        categoryId: category.id,
-        authorId: author.id,
+        category: {
+          connect: {
+            id: category,
+          },
+        },
+        author: {
+          connect: {
+            id: author.id,
+          },
+        },
       },
     });
 

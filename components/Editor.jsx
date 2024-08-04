@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 import dynamic from "next/dynamic";
 import { motion } from "framer-motion";
 import "react-quill/dist/quill.snow.css";
@@ -16,6 +16,7 @@ import {
   getDownloadURL,
 } from "firebase/storage";
 import { app } from "@/utils/firebase";
+import { toast } from "react-toastify";
 
 const ReactQuill = dynamic(() => import("react-quill"), { ssr: false });
 
@@ -36,18 +37,19 @@ const modules = {
 };
 
 const Editor = ({ categories, value }) => {
-  const { data } = useSession();
-
+  const { data: session } = useSession();
   const router = useRouter();
+
   const [content, setContent] = useState(value?.content || "");
   const [title, setTitle] = useState(value?.title || "");
-  const [category, setCategory] = useState({ id: "", name: "", emoji: "" });
+  const [category, setCategory] = useState(
+    value?.category || { id: "", name: "", emoji: "" }
+  );
   const [file, setFile] = useState(null);
   const [media, setMedia] = useState(value?.imageUrl || "");
 
   const handleCategoryChange = (event) => {
     const selectedOption = event.target.options[event.target.selectedIndex];
-
     setCategory({
       id: selectedOption.getAttribute("data-id"),
       name: selectedOption.getAttribute("data-name"),
@@ -56,8 +58,8 @@ const Editor = ({ categories, value }) => {
   };
 
   useEffect(() => {
-    const storage = getStorage(app);
-    const upload = () => {
+    if (file) {
+      const storage = getStorage(app);
       const name = new Date().getTime() + file.name;
       const storageRef = ref(storage, name);
 
@@ -69,45 +71,47 @@ const Editor = ({ categories, value }) => {
           const progress =
             (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
           console.log("Upload is " + progress + "% done");
-          switch (snapshot.state) {
-            case "paused":
-              console.log("Upload is paused");
-              break;
-            case "running":
-              console.log("Upload is running");
-              break;
-          }
         },
-        (error) => {},
+        (error) => {
+          console.error("Upload error:", error);
+        },
         () => {
           getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
             setMedia(downloadURL);
           });
         }
       );
-    };
-
-    file && upload();
+    }
   }, [file]);
 
   const handleSave = async () => {
     try {
-      const response = await axios.post("/api/blog", {
-        title,
-        content,
-        media,
-        category,
+      const method = value?.id ? "PUT" : "POST"; // Use PUT if id exists
+      const url = value?.id ? `/api/blog/${value.id}` : "/api/blog"; // URL for PUT if id exists
+
+      const response = await axios({
+        method,
+        url,
+        data: {
+          id: value?.id,
+          title,
+          content,
+          media,
+          category: category.id,
+        },
       });
-      console.log("Post response", response.data);
-      router.push(`/blog/${response.data.id}`);
+
+      toast.success(value?.id ? "Post Updated" : "Post Created");
+      router.push("/");
     } catch (error) {
-      console.log(error);
+      console.error("Save error:", error);
+      toast.error("Failed to save the post");
     }
   };
 
   return (
     <div>
-      <div className="container mx-auto my-8 py-10  p-6">
+      <div className="container mx-auto my-8 py-10 p-6">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -117,7 +121,6 @@ const Editor = ({ categories, value }) => {
           <h1 className="text-3xl md:text-4xl font-extrabold text-gray-900 mb-6">
             Editor Page
           </h1>
-          {/* Title Input */}
         </motion.div>
 
         <motion.div
@@ -146,27 +149,17 @@ const Editor = ({ categories, value }) => {
           <div className="mb-4">
             <input
               type="file"
-              name="name"
               id="image"
               onChange={(e) => setFile(e.target.files[0])}
-              style={{
-                display: "none",
-              }}
+              style={{ display: "none" }}
             />
-
             <button>
               <label htmlFor="image">
-                <Image
-                  src={"/external.png"}
-                  alt="image"
-                  width={24}
-                  height={24}
-                />
+                <Image src="/external.png" alt="image" width={24} height={24} />
               </label>
             </button>
-
             <div>
-              {media == "" ? (
+              {media === "" ? (
                 <div>Add a cover image</div>
               ) : (
                 <div>
@@ -176,7 +169,6 @@ const Editor = ({ categories, value }) => {
             </div>
           </div>
 
-          {/* Category Selector */}
           <div className="mb-4">
             <label
               htmlFor="category"
@@ -195,14 +187,13 @@ const Editor = ({ categories, value }) => {
               </option>
               {categories.map((cat) => (
                 <option
-                  key={cat.name}
+                  key={cat.id}
                   value={cat.name}
                   data-name={cat.name}
                   data-emoji={cat.emoji}
                   data-id={cat.id}
                 >
-                  {cat.emoji}
-                  {cat.name}
+                  {cat.emoji} {cat.name}
                 </option>
               ))}
             </select>

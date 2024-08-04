@@ -15,14 +15,17 @@ const BlogCard = ({ blog }) => {
       >
         <div className="sm:flex sm:items-center">
           <div className="sm:flex-shrink-0">
-            {}
-            <Image
-              width={400}
-              height={400}
-              className="h-16 w-16 sm:h-48 sm:w-72"
-              src={blog.imageUrl}
-              alt={blog.title}
-            />
+            {blog.imageUrl ? (
+              <Image
+                width={400}
+                height={400}
+                className="h-16 w-16 sm:h-48 sm:w-72"
+                src={blog.imageUrl}
+                alt={blog.title}
+              />
+            ) : (
+              <div></div>
+            )}
           </div>
           <div className="mt-4 sm:mt-0 sm:ml-4 text-center sm:text-left px-3 py-4">
             <p className="text-xl leading-tight font-semibold text-gray-900">

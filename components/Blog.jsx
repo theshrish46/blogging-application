@@ -42,14 +42,20 @@ const BlogPage = ({ blog, category }) => {
         </p>
       </motion.div>
 
-      <motion.div
-        initial={{ opacity: 0, x: -20 }}
-        animate={{ opacity: 1, x: 0 }}
-        transition={{ duration: 0.75, delay: 0.2 }}
-        className="mb-4"
-      >
-        <Image src={blog.imageUrl} alt="Image" width={750} height={500} />
-      </motion.div>
+      {blog.imageUrl ? (
+        <div>
+          <motion.div
+            initial={{ opacity: 0, x: -20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.75, delay: 0.2 }}
+            className="mb-4"
+          >
+            <Image src={blog.imageUrl} alt="Image" width={750} height={500} />
+          </motion.div>
+        </div>
+      ) : (
+        <div></div>
+      )}
 
       <motion.div
         initial={{ opacity: 0 }}

@@ -10,6 +10,12 @@ export const getCategoryById = async (id) => {
   return category;
 };
 
+export const getCategory = async () => {
+  const category = await prisma.category.findMany();
+
+  return category;
+};
+
 export const fetchBlogById = async (id) => {
   const blog = await prisma.post.findFirst({
     where: {
