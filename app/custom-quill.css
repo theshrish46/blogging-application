@@ -1,0 +1,78 @@
+/* styles/custom-quill.css */
+/* .ql-toolbar {
+  @apply bg-gray-200 border-b border-gray-300 rounded-t-lg p-2;
+} */
+
+.ql-toolbar button {
+  @apply p-2 text-gray-600 hover:bg-gray-300 rounded;
+}
+
+.ql-toolbar button.ql-active {
+  @apply bg-gray-400 text-white;
+}
+
+.ql-editor {
+  @apply min-h-40 p-4 bg-white border border-gray-300 rounded-lg;
+  @apply text-gray-800 leading-relaxed;
+}
+
+.ql-tooltip {
+  @apply bg-gray-100 border border-gray-400 shadow-md;
+}
+
+.ql-bubble .ql-tooltip {
+  @apply shadow-lg;
+}
+
+/* Additional custom styles */
+.ql-editor h1 {
+  @apply text-2xl font-bold my-4;
+}
+
+.ql-editor h2 {
+  @apply text-xl font-semibold my-3;
+}
+
+.ql-editor h3 {
+  @apply text-lg font-medium my-2;
+}
+
+.ql-editor a {
+  @apply text-blue-600 underline;
+}
+
+.ql-editor a:hover {
+  @apply text-blue-800;
+}
+
+.ql-editor blockquote {
+  @apply border-l-4 border-gray-300 pl-4 italic text-gray-700;
+}
+
+.ql-editor pre {
+  @apply bg-gray-100 p-2 rounded;
+}
+
+.ql-editor code {
+  @apply bg-gray-200 p-1 rounded;
+}
+
+.ql-editor ul {
+  @apply list-disc list-inside;
+}
+
+.ql-editor ol {
+  @apply list-decimal list-inside;
+}
+
+.ql-editor li {
+  @apply my-1;
+}
+
+.ql-editor img {
+  @apply max-w-full h-auto rounded;
+}
+
+.ql-editor video {
+  @apply max-w-full rounded;
+}
