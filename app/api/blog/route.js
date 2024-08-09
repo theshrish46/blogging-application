@@ -2,44 +2,21 @@ import { getAuthSession } from "@/utils/auth";
 import prisma from "@/utils/connect";
 import { NextResponse } from "next/server";
 
-export async function GET(req) {
-  const { id } = await req.json();
-
-  const user = getAuthSession();
-  const post = await prisma.post.findFirst({
-    where: {
-      id: id,
+export async function GET(request) {
+  const post = await prisma.post.findMany({
+    include: {
+      category: true,
+      author: true,
     },
   });
 
-  if (!user) {
-    return NextResponse.json({
-      msg: "No User found",
-      blog: post,
-    });
-  }
-
-  const updatedPost = await prisma.post.update({
-    where: {
-      id: id,
-    },
-    data: {
-      views: {
-        increment: 1,
-      },
-    },
-  });
-
-  return NextResponse.json({
-    msg: "View incremented",
-    blog: updatedPost,
-  });
+  return NextResponse.json(post);
 }
 
 export async function POST(req) {
   const { title, content, category, media } = await req.json();
 
-  const user = getAuthSession();
+  const user = await getAuthSession();
   //   console.log(user);
   const author = await prisma.user.findFirst({
     where: {
@@ -47,6 +24,9 @@ export async function POST(req) {
       email: user.email,
     },
   });
+
+  console.log("User ", user);
+  console.log("Author ", author);
 
   if (!author) {
     return NextResponse.json({

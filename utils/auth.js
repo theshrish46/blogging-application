@@ -35,4 +35,21 @@ export const authOptions = {
   },
 };
 
-export const getAuthSession = () => getServerSession(authOptions);
+export const getAuthSession = async () => {
+  try {
+    const session = await getServerSession(authOptions);
+    if (!session) {
+      console.log("No session found");
+      return null;
+    }
+    console.log("Session found:", session);
+    return {
+      id: session.user.id,
+      name: session.user.name,
+      email: session.user.email,
+    };
+  } catch (error) {
+    console.error("Error retrieving session:", error);
+    return null;
+  }
+};

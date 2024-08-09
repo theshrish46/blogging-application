@@ -1,4 +1,5 @@
 import prisma from "@/utils/connect"; // Ensure the path is correct
+import { NextResponse } from "next/server";
 
 export async function PUT(req, { params }) {
   // If authentication is required, uncomment and implement session check
@@ -14,7 +15,6 @@ export async function PUT(req, { params }) {
   const { blogId } = params;
   const { title, content, media, category } = await req.json();
 
-  console.log('blogid', blogId);
   try {
     console.log("inside the try block");
     const updatedPost = await prisma.post.update({
@@ -33,5 +33,24 @@ export async function PUT(req, { params }) {
     return new Response(JSON.stringify({ message: "Failed to update post" }), {
       status: 500,
     });
+  }
+}
+
+export async function DELETE(request, { params }) {
+  console.log(params.blogId);
+  try {
+    const deletePost = await prisma.post.delete({
+      where: {
+        id: params.blogId,
+      },
+    });
+
+    return NextResponse.json({
+      msg: "Post Deleted",
+      deletePost,
+    });
+  } catch (error) {
+    console.log("error ===>", error);
+    return NextResponse.json(error);
   }
 }

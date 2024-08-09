@@ -14,52 +14,93 @@ import {
   Legend,
 } from "chart.js";
 import "chart.js/auto";
+import { toast } from "react-toastify";
 
 ChartJS.register(BarElement, CategoryScale, LinearScale, Tooltip, Legend);
 
 const ManagePage = () => {
   const { data: session, status } = useSession();
   const [blogs, setBlogs] = useState([]);
-  const [chartData, setChartData] = useState(null);
+  const [chartData, setChartData] = useState({});
+  const [comments, setComments] = useState([]);
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    const fetchBlogs = async () => {
+    const fetchBlogsAndComments = async () => {
       if (status === "authenticated" && session?.user?.email) {
         try {
-          const response = await axios.get(
-            `/api/blog/author/${session.user.id}`
-          );
-          setBlogs(response.data);
+          const [blogsResponse, commentsResponse, categoriesResponse] =
+            await Promise.all([
+              axios.get(`/api/blog/author/${session.user.id}`),
+              axios.get(`/api/blog-comment/${session.user.id}`),
+              axios.get("/api/categories"),
+            ]);
 
-          const titles = response.data.map((blog) => blog.title);
-          const views = response.data.map((blog) => blog.views);
-          const likes = response.data.map((blog) => blog.likes);
+          setBlogs(blogsResponse.data);
+          setComments(commentsResponse.data);
+
+          const titles = blogsResponse.data.map((blog) => blog.title);
+          const views = blogsResponse.data.map((blog) => blog.views);
+          const likes = blogsResponse.data.map((blog) => blog.likes);
+
+          const categories = categoriesResponse.data.map(
+            (category) => category.name
+          );
+          const postsPerCategory = categoriesResponse.data.map(
+            (category) =>
+              blogsResponse.data.filter(
+                (blog) => blog.categoryId === category.id
+              ).length
+          );
 
           setChartData({
-            labels: titles,
-            datasets: [
-              {
-                label: "Views",
-                data: views,
-                backgroundColor: "rgba(54, 162, 235, 0.6)",
-              },
-              {
-                label: "Likes",
-                data: likes,
-                backgroundColor: "rgba(255, 99, 132, 0.6)",
-              },
-            ],
+            likesAndViews: {
+              labels: titles,
+              datasets: [
+                {
+                  label: "Views",
+                  data: views,
+                  backgroundColor: "rgba(54, 162, 235, 0.6)",
+                },
+                {
+                  label: "Likes",
+                  data: likes,
+                  backgroundColor: "rgba(255, 99, 132, 0.6)",
+                },
+              ],
+            },
+            postsPerCategory: {
+              labels: categories,
+              datasets: [
+                {
+                  label: "Posts Per Category",
+                  data: postsPerCategory,
+                  backgroundColor: "rgba(75, 192, 192, 0.6)",
+                },
+              ],
+            },
           });
         } catch (error) {
           console.error(error);
-          setError("Failed to load blogs.");
+          setError("Failed to load blogs and comments.");
         }
       }
     };
 
-    fetchBlogs();
+    fetchBlogsAndComments();
   }, [session, status]);
+
+  const deleteComment = async (commentId) => {
+    try {
+      const response = await axios.delete(`/api/blog-comment/${commentId}`);
+      setComments((prevComments) =>
+        prevComments.filter((comment) => comment.id !== commentId)
+      );
+      toast.success(response.data.msg);
+    } catch (error) {
+      console.error("Failed to delete comment:", error);
+    }
+  };
 
   if (status === "loading") {
     return <p>Loading...</p>;
@@ -79,42 +120,64 @@ const ManagePage = () => {
         Manage Your Blogs
       </h1>
 
-      {chartData && (
-        <div className="mb-8">
-          <Bar data={chartData} />
-        </div>
+      {chartData.likesAndViews && (
+        <motion.div
+          className="mb-8"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5 }}
+        >
+          <h2 className="text-xl font-bold text-gray-700 mb-4">
+            Likes and Views on Each Blog
+          </h2>
+          <Bar data={chartData.likesAndViews} />
+        </motion.div>
       )}
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      {chartData.postsPerCategory && (
+        <motion.div
+          className="mb-8"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5 }}
+        >
+          <h2 className="text-xl font-bold text-gray-700 mb-4">
+            Total Posts Per Category
+          </h2>
+          <Bar data={chartData.postsPerCategory} />
+        </motion.div>
+      )}
+
+      <h2 className="text-xl font-bold text-gray-700 mb-4">Comments</h2>
+      <motion.ul
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5 }}
+      >
         {blogs.map((blog) => (
-          <motion.div
-            key={blog.id}
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 0.5 }}
-            className="p-4 border rounded-lg shadow-sm"
-          >
-            <h2 className="text-xl font-semibold">{blog.title}</h2>
-            <p>{blog.excerpt}</p>
-            <p className="text-sm text-gray-600">{blog.views} views</p>
-            <p className="text-sm text-gray-600">{blog.likes} likes</p>
-            <div className="mt-4 flex space-x-2">
-              <button
-                onClick={() => handleEdit(blog.id)}
-                className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
-              >
-                Edit
-              </button>
-              <button
-                onClick={() => handleDelete(blog.id)}
-                className="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600"
-              >
-                Delete
-              </button>
-            </div>
-          </motion.div>
+          <div className="bg-gray-100/10 p-2 my-2" key={blog.id}>
+            <div className="text-xl font-bold">{blog.title}</div>
+            {comments.map((comment) =>
+              comment.postId === blog.id ? (
+                <li
+                  key={comment.id}
+                  className="flex justify-between items-center py-2 border-b"
+                >
+                  <div>
+                    <span>{comment.content}</span>
+                  </div>
+                  <button
+                    onClick={() => deleteComment(comment.id)}
+                    className="text-red-500"
+                  >
+                    Delete
+                  </button>
+                </li>
+              ) : null
+            )}
+          </div>
         ))}
-      </div>
+      </motion.ul>
     </div>
   );
 };

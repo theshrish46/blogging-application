@@ -4,6 +4,8 @@ import { Inter } from "next/font/google";
 import AuthProvider from "@/providers/AuthProvider";
 import "./custom-quill.css";
 import "react-quill/dist/quill.bubble.css";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -19,6 +21,14 @@ export default function RootLayout({ children }) {
         <AuthProvider>
           <Navbar />
           <div>{children}</div>
+          <ToastContainer
+            position="bottom-right"
+            autoClose={1000}
+            hideProgressBar={false}
+            newestOnTop
+            closeOnClick
+            draggable
+          />
         </AuthProvider>
       </body>
     </html>

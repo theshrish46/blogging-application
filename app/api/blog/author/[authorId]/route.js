@@ -8,11 +8,9 @@ export async function GET(request, { params }) {
 
   const blogs = await prisma.post.findMany({
     where: { authorId: authorId },
-    select: {
-      id: true,
-      title: true,
-      views: true,
-      likes: true,
+    include: {
+      author: true,
+      category: true,
     },
   });
 

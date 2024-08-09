@@ -28,3 +28,16 @@ export const fetchBlogById = async (id) => {
 
   return blog;
 };
+
+export const fetchComment = async (id) => {
+  const comment = await prisma.comment.findMany({
+    where: {
+      postId: id,
+    },
+    include: {
+      author: true,
+    },
+  });
+
+  return comment;
+};

@@ -86,12 +86,15 @@ model Post {
 model Comment {
   id        String   @id @default(auto()) @map("_id") @db.ObjectId
   content   String
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  
   post      Post     @relation(fields: [postId], references: [id])
   postId    String
+  
   author    User     @relation(fields: [authorId], references: [id])
   authorId  String
+  
+  updatedAt DateTime @updatedAt
+  createdAt DateTime @default(now())
 }
 
 model Category {
