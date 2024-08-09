@@ -2,7 +2,11 @@ import BlogCard from "@/components/BlogCard";
 import prisma from "@/utils/connect";
 
 export default async function HomePage() {
-  const blogs = await prisma.post.findMany();
+  const blogs = await prisma.post.findMany({
+    include: {
+      author: true,
+    },
+  });
 
   return (
     <div className="min-h-screen bg-gray-100">
@@ -67,7 +71,7 @@ export default async function HomePage() {
               </a>
             </div>
 
-            <div className="container mx-auto py-6">
+            <div className="w-full mx-auto py-6">
               {blogs.map((blog) => (
                 <BlogCard blog={blog} key={blog.id} />
               ))}
