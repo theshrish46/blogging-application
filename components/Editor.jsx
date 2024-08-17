@@ -43,7 +43,7 @@ const Editor = ({ categories, value }) => {
   const [content, setContent] = useState(value?.content || "");
   const [title, setTitle] = useState(value?.title || "");
   const [category, setCategory] = useState(
-    value?.category || { id: "", name: "", emoji: "" }
+    categories || { id: "", name: "", emoji: "" }
   );
   const [file, setFile] = useState(null);
   const [media, setMedia] = useState(value?.imageUrl || "");
@@ -86,8 +86,8 @@ const Editor = ({ categories, value }) => {
 
   const handleSave = async () => {
     try {
-      const method = value?.id ? "PUT" : "POST"; // Use PUT if id exists
-      const url = value?.id ? `/api/blog/${value.id}` : "/api/blog"; // URL for PUT if id exists
+      const method = value?.id ? "PUT" : "POST";
+      const url = value?.id ? `/api/blog/${value.id}` : "/api/blog";
 
       const response = await axios({
         method,
