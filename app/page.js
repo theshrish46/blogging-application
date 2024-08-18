@@ -1,5 +1,5 @@
-import BlogCard from "@/components/BlogCard";
-import prisma from "@/utils/connect";
+import BlogCard from "./../components/BlogCard";
+import prisma from "./../utils/connect";
 
 export default async function HomePage() {
   const blogs = await prisma.post.findMany({
@@ -53,7 +53,7 @@ export default async function HomePage() {
                 Get Started
               </h2>
               <p className="text-gray-600 mb-4">
-                It's simple to start sharing your thoughts and ideas. Our
+                It&apos;s simple to start sharing your thoughts and ideas. Our
                 platform provides everything you need to get started with
                 blogging.
               </p>

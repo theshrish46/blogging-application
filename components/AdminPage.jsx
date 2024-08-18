@@ -31,8 +31,6 @@ const AdminPage = () => {
           axios.get("/api/categories"),
         ]);
 
-        console.log("Blog response", blogsResponse.data);
-        console.log("Category Response", categoriesResponse.data);
 
         const blogsData = blogsResponse.data;
         const categoriesData = categoriesResponse.data;
@@ -67,12 +65,12 @@ const AdminPage = () => {
   }, []);
 
   const deleteBlog = async (blogId) => {
-    console.log("Blog Id===", blogId);
     try {
       const response = await axios.delete(`/api/blog/${blogId}`);
       setBlogs((prevBlogs) => prevBlogs.filter((blog) => blog.id !== blogId));
       toast.warning(response.data.msg);
     } catch (error) {
+      toast.error("Failed to delete Blog")
       console.error("Failed to delete blog:", error);
     }
   };

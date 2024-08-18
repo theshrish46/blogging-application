@@ -37,6 +37,8 @@
     "@testing-library/react": "^16.0.0",
     "babel-jest": "^29.7.0",
     "babel-plugin-module-resolver": "^5.0.2",
+    "electron": "^31.4.0",
+    "electron-packager": "^17.1.2",
     "eslint": "^8",
     "eslint-config-next": "14.2.5",
     "identity-obj-proxy": "^3.0.0",

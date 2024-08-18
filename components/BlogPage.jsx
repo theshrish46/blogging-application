@@ -8,6 +8,7 @@ import React, { useEffect, useState } from "react";
 
 import { AiFillLike } from "react-icons/ai";
 import { AiOutlineLike } from "react-icons/ai";
+import { toast } from "react-toastify";
 
 const BlogPage = ({ blog, category, comments }) => {
   const { data: user } = useSession();
@@ -18,7 +19,6 @@ const BlogPage = ({ blog, category, comments }) => {
   const [comment, setComment] = useState("");
 
   useEffect(() => {
-    // Increment view count when the page is loaded
     const incrementViews = async () => {
       try {
         await axios.post("/api/blog-increment", { id: blog.id });
@@ -38,10 +38,11 @@ const BlogPage = ({ blog, category, comments }) => {
         blogId: blog.id,
         comment,
       });
-      console.log("Response Data", response.data);
+      toast.success("Comment Posted")
       setComment("");
       setArrayComments([...arrayComments, response.data]);
     } catch (error) {
+      toast.error("Failed to post comment")
       console.error("Failed to post comment", error);
     }
   };
@@ -50,7 +51,7 @@ const BlogPage = ({ blog, category, comments }) => {
     try {
       const response = await axios.post("/api/blog-like", { id: blog.id });
       setLikes(response.data.likes);
-      console.log(response.data);
+      toast.success("Liked")
     } catch (error) {
       console.error("Failed to like the blog", error);
     }

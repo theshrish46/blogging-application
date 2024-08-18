@@ -1,5 +1,5 @@
-import { getAuthSession } from "@/utils/auth";
-import prisma from "@/utils/connect";
+import { getAuthSession } from "./../../../utils/auth";
+import prisma from "./../../../utils/connect";
 import { NextResponse } from "next/server";
 
 export async function GET(request) {
@@ -52,7 +52,6 @@ export async function POST(request) {
       },
     });
 
-    console.log("Comment POST", newComment);
 
     return NextResponse.json({ comment: newComment.content }, { status: 200 });
   } catch (error) {

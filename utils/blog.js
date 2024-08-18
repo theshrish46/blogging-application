@@ -1,4 +1,4 @@
-import prisma from "@/utils/connect";
+import prisma from "./connect";
 
 export const getCategoryById = async (id) => {
   const category = await prisma.category.findFirst({

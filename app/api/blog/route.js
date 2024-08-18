@@ -1,5 +1,5 @@
-import { getAuthSession } from "@/utils/auth";
-import prisma from "@/utils/connect";
+import { getAuthSession } from "./../../../utils/auth";
+import prisma from "./../../../utils/connect";
 import { NextResponse } from "next/server";
 
 export async function GET(request) {
@@ -25,9 +25,6 @@ export async function POST(req) {
     },
   });
 
-  console.log("User ", user);
-  console.log("Author ", author);
-
   if (!author) {
     return NextResponse.json({
       msg: "There is no such user",
@@ -52,9 +49,7 @@ export async function POST(req) {
         },
       },
     });
-
-    console.log(post);
-
+    
     return NextResponse.json({
       msg: "Data Stored Successfully",
       id: post.id,

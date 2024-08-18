@@ -1,14 +1,8 @@
-import prisma from "@/utils/connect"; // Ensure the path is correct
+import prisma from "./../../../../utils/connect";
 import { NextResponse } from "next/server";
 
 export async function PUT(req, { params }) {
-  // If authentication is required, uncomment and implement session check
-  // const session = await getServerSession(authOptions);
-  // if (!session || !session.user) {
-  //   return new Response(JSON.stringify({ message: "Unauthorized" }), {
-  //     status: 401,
-  //   });
-  // }
+
 
   console.log("inside the put function");
 
@@ -16,7 +10,6 @@ export async function PUT(req, { params }) {
   const { title, content, media, category } = await req.json();
 
   try {
-    console.log("inside the try block");
     const updatedPost = await prisma.post.update({
       where: { id: blogId }, // Adjust if `blogId` is not of type `id`
       data: {
@@ -37,7 +30,6 @@ export async function PUT(req, { params }) {
 }
 
 export async function DELETE(request, { params }) {
-  console.log(params.blogId);
   try {
     const deletePost = await prisma.post.delete({
       where: {

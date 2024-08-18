@@ -1,7 +1,7 @@
 import Navbar from "@/components/Navbar";
 import "./globals.css";
 import { Inter } from "next/font/google";
-import AuthProvider from "@/providers/AuthProvider";
+import AuthProvider from "./..//providers/AuthProvider";
 import "./custom-quill.css";
 import "react-quill/dist/quill.bubble.css";
 import { ToastContainer } from "react-toastify";

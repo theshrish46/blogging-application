@@ -5,7 +5,7 @@
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 import Modal from "./Modal";
-import AdminPage from "@/components/AdminPage";
+import AdminPage from "./../../components/AdminPage";
 
 const Admin = () => {
   const [open, setOpen] = useState(true);

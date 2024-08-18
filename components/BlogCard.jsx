@@ -6,9 +6,8 @@ import Image from "next/image";
 import Link from "next/link";
 
 const BlogCard = ({ blog }) => {
-  // Function to keep only <p> tags and their content, and then slice the content
   const cleanContent = (html) => {
-    // Regular expression to match <p> tags and their content
+
     const regex = /<p[^>]*>(.*?)<\/p>/gi;
     let result;
     let cleanedContent = "";
@@ -17,7 +16,6 @@ const BlogCard = ({ blog }) => {
       cleanedContent += `<p>${result[1]}</p>`;
     }
 
-    // Slice the content to ensure it's no longer than 100 characters
     const sliceLength = 100;
     if (cleanedContent.length > sliceLength) {
       cleanedContent = cleanedContent.slice(0, sliceLength) + "...";

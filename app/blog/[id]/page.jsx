@@ -6,10 +6,10 @@ import {
   fetchComment,
   getCategory,
   getCategoryById,
-} from "@/utils/blog";
-import BlogPage from "@/components/BlogPage";
-import { getAuthSession } from "@/utils/auth";
-import Editor from "@/components/Editor";
+} from "./../../../utils/blog";
+import BlogPage from "./../../../components/BlogPage";
+import { getAuthSession } from "./../../../utils/auth";
+import Editor from "./../../../components/Editor";
 
 const BlogDetailPage = async ({ params }) => {
   const { id } = params;

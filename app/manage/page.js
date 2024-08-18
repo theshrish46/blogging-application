@@ -1,4 +1,4 @@
-import ManagePage from "@/components/Manage";
+import ManagePage from "./../../components/Manage";
 import React from "react";
 
 const Manage = () => {
