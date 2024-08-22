@@ -143,6 +143,18 @@ const Navbar = () => {
               >
                 Write
               </Link>
+              <Link
+                href="/manage"
+                className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-50"
+              >
+                Manage
+              </Link>
+              <Link
+                href="/admin"
+                className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-50"
+              >
+                Admin
+              </Link>
               <button
                 onClick={() => setIsDropdownOpen(!isDropdownOpen)}
                 className="block w-full text-left px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-50"

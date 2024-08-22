@@ -33,6 +33,7 @@ export const authOptions = {
       return token;
     },
   },
+  debug: true,
 };
 
 export const getAuthSession = async () => {

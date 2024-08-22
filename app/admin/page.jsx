@@ -31,14 +31,14 @@ const Admin = () => {
       setAuthenticated(true);
       localStorage.setItem("adminKey", key); // Store the key for session persistence
     } else {
-      toast.error("Wrong admin key")
+      toast.error("Wrong admin key");
       router.push("/"); // Redirect to home page if the key is incorrect
     }
   };
 
   if (authenticated) {
     return (
-      <div className="container mx-auto p-6">
+      <div className="container mx-auto p-6 mt-20">
         <h1 className="text-3xl font-extrabold text-gray-900 mb-6">
           Welcome to the Admin Page
         </h1>
