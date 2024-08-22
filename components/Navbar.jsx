@@ -169,12 +169,21 @@ const Navbar = () => {
                     exit={{ opacity: 0, scale: 0.95 }}
                     className="pl-3"
                   >
-                    <div
-                      onClick={() => signOut()}
-                      className="block px-3 py-2 text-sm text-gray-700 hover:bg-gray-100 cursor-pointer"
-                    >
-                      Logout
-                    </div>
+                    {status == "authenticated" ? (
+                      <div
+                        onClick={() => signOut()}
+                        className="block px-3 py-2 text-sm text-gray-700 hover:bg-gray-100 cursor-pointer"
+                      >
+                        Logout
+                      </div>
+                    ) : (
+                      <Link
+                        href={"/login"}
+                        className="block px-3 py-2 text-sm text-gray-700 hover:bg-gray-100 cursor-pointer"
+                      >
+                        Login
+                      </Link>
+                    )}
                   </motion.div>
                 )}
               </AnimatePresence>
